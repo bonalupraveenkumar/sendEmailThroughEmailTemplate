@@ -1,0 +1,117 @@
+<aura:component controller="EmailController">
+    <aura:attribute name="isProcessing" type="Boolean" default="false"/>
+    <aura:attribute name="selectedFolder" type="String" access="public"/>
+    <aura:attribute name="emailFolderList" type="List" access="public"/>
+    <aura:attribute name="selectedEmailTemplate" type="String" access="public"/>
+    <aura:attribute name="emailTemplateList" type="List" access="public"/>
+    <aura:attribute name="templateSubject" type="String" access="public"/>
+    <aura:attribute name="temp_Body" type="String" access="public"/>
+    <aura:attribute name="emailToAddress" type="String" access="public"/>
+    <aura:attribute name="isSuccess" type="Boolean" default="false" />
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <div class="slds-text-heading_large slds-box">Email</div>
+    <aura:if isTrue="{!v.isProcessing}">
+        <div style="text-align:center">
+            <lightning:spinner alternativeText="Loading" size="medium"/>
+        </div>
+    </aura:if>
+    <div class="slds-box">
+        <fieldset class="slds-form-element slds-form-element_compound">
+            <div class="slds-form-element__control">
+                <div class="slds-form-element__row">
+                    <div class="slds-size_1-of-3">
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <lightning:select aura:id="selectFolderId" name="selectFolderId" label="Folder Name" required="true" 
+                                                  value="{!v.selectedFolder}" onchange="{!c.getTemplate}">       
+                                    <option value="">Choose Folder Name...</option>
+                                    <aura:iteration items="{!v.emailFolderList}" var="email_folder">
+                                        <option text="{!email_folder.label}" value="{!email_folder.value}">
+                                        </option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-size_1-of-3">
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <lightning:select aura:id="selectEmailTemplateId" name="selectEmailTemplateId" label="Email Template" required="true" 
+                                                  value="{!v.selectedEmailTemplate}" onchange="{!c.getTemp_Body}">       
+                                    <option value="">Choose Email Template Name...</option>
+                                    <aura:iteration items="{!v.emailTemplateList}" var="email_Template">
+                                        <option text="{!email_Template.label}" value="{!email_Template.value}">
+                                        </option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__control">
+                    <div class="slds-form-element__row">
+                        <div class="slds-size_2-of-3">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <label class="slds-form-element__label" for="input-01">Subject</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" id="subjectLine" class="slds-input" required="true" value="{!v.templateSubject}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__control">
+                    <div class="slds-form-element__row">
+                        <div class="slds-size_2-of-3">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <label class="slds-form-element__label" for="input-01">Email Body</label>
+                                    <div class="slds-form-element__control">
+                                        <lightning:inputRichText value="{!v.temp_Body}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__control">
+                    <div class="slds-form-element__row">
+                        <div class="slds-size_1-of-3">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__control">
+                                        <lightning:input aura:id="addressLine" name="addressLine" label="To" value="{!v.emailToAddress}" required="true"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__control">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <button class="slds-button slds-button_brand" onclick="{!c.sendEmail}">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <aura:if isTrue="{!v.isSuccess}">
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__row">
+                            <div class="slds-size_2-of-3">
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <ui:message title="Mesaage Sent!" severity="confirm" closable="true"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+        </fieldset>
+    </div>
+</aura:component>
